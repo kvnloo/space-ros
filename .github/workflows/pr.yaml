@@ -14,7 +14,9 @@ jobs:
       - name: Clone project
         uses: actions/checkout@v7
       - name: Install dependencies
-        run: python3 -m pip install vcstool yamllint
+        run: python3 -m pip install vcstool yamllint PyYAML
+      - name: Test repository merge script
+        run: python3 -m unittest discover -s scripts/tests -p '*_test.py' -v
       - name: Validate formatting
         run: >
           yamllint ros2.repos
