@@ -4,7 +4,6 @@ import hashlib
 import json
 import re
 import subprocess
-from urllib.request import Request, urlopen
 
 BASE = '9cd08dcdf7fc8aab2660497ac02c3f67285efbbe'
 OUT = Path('wave12-results/su2-trace')
@@ -13,7 +12,11 @@ PATTERN = r'NEARFIELD_BOUNDARY|BC_NearField|BC_Fluid_Interface|MatchNearField'
 
 
 def run(*args):
-    return subprocess.run(args, check=True, capture_output=True, text=True, timeout=180).stdout
+    completed = subprocess.run(args, capture_output=True, text=True, timeout=180)
+    if completed.returncode:
+        print(completed.stderr, flush=True)
+        raise RuntimeError(f'Command failed ({completed.returncode}): {args}')
+    return completed.stdout
 
 
 def main():
@@ -22,7 +25,8 @@ def main():
     run('git', 'init', str(repo))
     run('git', '-C', str(repo), 'remote', 'add', 'origin', 'https://github.com/su2code/SU2.git')
     run('git', '-C', str(repo), 'fetch', '--filter=blob:none', '--depth=1', 'origin', BASE)
-    run('git', '-C', str(repo), 'checkout', '--detach', '--no-overlay', 'FETCH_HEAD')
+    run('git', '-C', str(repo), 'sparse-checkout', 'set', 'SU2_CFD/src', 'SU2_CFD/include', 'Common/src', 'Common/include')
+    run('git', '-C', str(repo), 'checkout', '--detach', 'FETCH_HEAD')
     if run('git', '-C', str(repo), 'rev-parse', 'HEAD').strip() != BASE:
         raise RuntimeError('Wrong source revision')
     paths = run('git', '-C', str(repo), 'ls-tree', '-r', '--name-only', BASE).splitlines()
