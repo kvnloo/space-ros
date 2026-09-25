@@ -1,0 +1,22 @@
+[
+ ["space-ros/space-ros",421,"Default merge output",388,"Buildx failure propagation"],
+ ["nasa/fprime",6031,"Rate-group diagnostic semantics",6020,"Model generation performance"],
+ ["nasa/cFS",1122,"Queue default integration",1036,"Host queue resource diagnostics"],
+ ["nasa/trick",2216,"Comparison retry state",1893,"Frame-time measurement"],
+ ["nasa/astrobee",628,"Late subscriber retention",788,"Executive ROS2 migration"],
+ ["nasa/jeod",37,"Optimization and aliasing warnings",39,"Circular-orbit initialization"],
+ ["nasa/GMAT",4,"Solar-flux row selection",6,"Atmospheric root finding"],
+ ["OpenVSP/OpenVSP",369,"Control-surface scaling",null,"STEP geometry round-trip invariants"],
+ ["AVSLab/basilisk",1411,"Reaction-wheel physical units",1345,"Earth radiation pressure"],
+ ["tudat-team/tudatpy",524,"Binding documentation coverage",878,"Observatory-data ingestion"],
+ ["ros2/rclcpp",3201,"Executor future completion",3153,"Delivery-path introspection"],
+ ["gazebosim/gz-sim",3723,"Tracked-vehicle test determinism",3697,"Lift/drag pitching moments"],
+ ["moveit/moveit2",3785,"Acceleration-limit units",3802,"Attached-body memory ownership"],
+ ["PX4/PX4-Autopilot",28517,"EKF replay completion",28519,"DDS time convergence"],
+ ["OpenMDAO/OpenMDAO",3795,"Bound-scaling reports",3800,"Complex-step real-point preservation"],
+ ["su2code/SU2",2864,"Biparabolic regression completion",2826,"Stagnation heat-flux validation"],
+ ["openmc-dev/openmc",4041,"Scalar/array interpolation parity",3975,"Transport tracking benchmarking"],
+ ["PlasmaPy/PlasmaPy",3285,"Units and particle agent guidance",3310,"Radiation-reaction particle pushing"],
+ ["hiddenSymmetries/simsopt",643,"Fourier boundary semantics",647,"Differentiable JAX-port scoping"],
+ ["idaholab/moose",33509,"Numbered-name expression expansion",33644,"Partial-assembly scoping"]
+]
