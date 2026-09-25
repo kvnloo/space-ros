@@ -1,0 +1,60 @@
+# Fork-only evidence. No upstream writes or production deployment.
+name: Frontier wave 12 evidence
+
+on:
+  push:
+    branches: [probe/frontier-20-repo-wave1]
+    paths:
+      - tools/probes/frontier_wave12.py
+      - tools/probes/plasmapy_units_guidance.md
+      - .github/workflows/frontier-wave12.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: frontier-wave12-evidence
+  cancel-in-progress: false
+
+jobs:
+  evidence:
+    if: github.repository == 'kvnloo/space-ros'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix:
+        lane: [su2, plasmapy]
+    steps:
+      - name: Check out trusted fork tools without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+          sparse-checkout: tools/probes
+      - name: Set up pinned PlasmaPy source and isolated dependencies
+        if: matrix.lane == 'plasmapy'
+        run: |
+          git init plasmapy-target
+          git -C plasmapy-target remote add origin https://github.com/PlasmaPy/PlasmaPy.git
+          git -C plasmapy-target fetch --depth=1 origin 391579b61d153bfe4b92f59f39ab6e563a44f29d
+          git -C plasmapy-target checkout --detach FETCH_HEAD
+          python3 -m venv .wave12-venv
+          .wave12-venv/bin/python -m pip install -e ./plasmapy-target
+          mkdir -p wave12-results
+          .wave12-venv/bin/python -m pip freeze > wave12-results/dependencies.txt
+      - name: Audit pinned SU2 nearfield source
+        if: matrix.lane == 'su2'
+        run: python3 tools/probes/frontier_wave12.py su2
+      - name: Execute exact PlasmaPy documentation examples
+        if: matrix.lane == 'plasmapy'
+        run: .wave12-venv/bin/python tools/probes/frontier_wave12.py plasmapy
+      - name: Preserve evidence including failures
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: frontier-wave12-${{ matrix.lane }}
+          path: wave12-results/
+          if-no-files-found: warn
+          retention-days: 30
